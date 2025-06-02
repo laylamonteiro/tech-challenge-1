@@ -45,6 +45,8 @@ class Processamento(SQLModel, table=True):
 
 
 class User(SQLModel, table=True):
+    __tablename__ = "users"
+
     id: int | None = Field(default=None, primary_key=True)
     username: str = Field(index=True, max_length=50)
-    hashed_password: str
+    hashed_password: str = Field(nullable=False)

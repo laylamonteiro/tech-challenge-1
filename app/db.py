@@ -1,12 +1,15 @@
-from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel import SQLModel, create_engine, Session
+import os
 
+# Por padrão (sem var de ambiente), uso SQLite local
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///database.db")
 
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
+# Se for SQLite, precisa desse argumento para uso multithread
+connect_args = {}
+if DATABASE_URL.startswith("sqlite"):
+    connect_args = {"check_same_thread": False}
 
-connect_args = {"check_same_thread": False}
-engine = create_engine(sqlite_url, connect_args=connect_args, echo=True)
-
+engine = create_engine(DATABASE_URL, echo=True, connect_args=connect_args)
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
